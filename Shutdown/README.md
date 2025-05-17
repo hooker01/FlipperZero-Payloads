@@ -1,6 +1,6 @@
 # Delayed Forced Shutdown Script
 
-## SYNOPSIS
+## OVERVIEW
 
 This script triggers a forced shutdown of the Windows system with a 15-minute countdown timer. All running applications will be forcibly closed when the timer expires.
 
