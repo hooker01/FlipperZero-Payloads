@@ -1,9 +1,9 @@
-REM ┌────────────────────────────────────────────────┐
+REM ┌──────────────────────────────────────────────────────────────────┐
 REM │ hooker01 | github.com/hooker01                                   │
 REM │ Description: Initiates a forced system shutdown on Windows       │
 REM │              after a 15-minute delay                             │
 REM │ Target: Windows 10/11                                            │                                                                  
-REM └────────────────────────────────────────────────┘
+REM └──────────────────────────────────────────────────────────────────┘
 
 
 DELAY 1000  
