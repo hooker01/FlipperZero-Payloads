@@ -1,6 +1,6 @@
 # Explorer Killer Script
 
-## SYNOPSIS
+## OVERVIEW
 
 This script runs a continuous PowerShell command that forcefully stops the `explorer.exe` process on Windows machines. As a result, the desktop environment including taskbar and file explorer will be hidden until the system is restarted.
 
