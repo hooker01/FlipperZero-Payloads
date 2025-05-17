@@ -12,7 +12,7 @@ This Flipper Zero payload runs a PowerShell script that periodically takes fulls
 
 - Works on Windows 10 and 11.
 - May not function correctly on all systems due to differences in permissions, antivirus settings, or Windows configurations.
-- Intended for educational and prank purposes only.
+- Intended for educational purposes only.
 
 ## Disclaimer
 
