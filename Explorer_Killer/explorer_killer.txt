@@ -1,10 +1,10 @@
-REM ┌──────────────────────────────────────────────┐
+REM ┌───────────────────────────────────────────────────────────────┐
 REM │ hooker01 | github.com/hooker01                                │
 REM │ Description: Script to silently and repeatedly stop           │
 REM │              explorer.exe on Windows, disrupting the          │
 REM │              user interface until system restart.             │
 REM │ Target: win10/11                                              │
-REM └──────────────────────────────────────────────┘
+REM └───────────────────────────────────────────────────────────────┘
 
 
 DELAY 500
