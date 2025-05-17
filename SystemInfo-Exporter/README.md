@@ -17,3 +17,8 @@ Replace the `WEBHOOK_URL` variable in the script with your own Discord webhook U
 - Requires internet access to fetch public IP addresses.
 - Sensitive data (Wi-Fi passwords, user info) is sent to the webhook.
 - Use responsibly and only on authorized systems.
+
+---
+
+*Author: hooker01*  
+*GitHub: [github.com/hooker01](https://github.com/hooker01)*
