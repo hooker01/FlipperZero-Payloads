@@ -15,7 +15,7 @@ This Flipper Zero payload runs a PowerShell script that monitors for USB device 
 - Runs indefinitely in the background.
 
 ## Target  
-Windows 10 and Windows 11.
+**WINDOWS 8.1**
 
 ## Notes  
 - Internet access is required for uploading to Discord.  
