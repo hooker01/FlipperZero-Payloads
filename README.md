@@ -11,7 +11,7 @@ Test in a safe environment before real-world deployment.
 
 ## 🛠️ Notes
 
-- Scripts are Windows 10/11 compatible
+- Scripts are Windows 10/11 and some Windows 8.1 compatible
 - No admin privileges required unless noted
 - Customize intervals and delays inside each script where applicable
 
