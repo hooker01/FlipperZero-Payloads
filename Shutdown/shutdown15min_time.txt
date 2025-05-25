@@ -11,8 +11,5 @@ DELAY 300
 STRING cmd /c start "" shutdown /s /f /t 900
 DELAY 300
 ENTER
-DELAY 300
-STRING exit
-DELAY 300
-ENTER
+
 
