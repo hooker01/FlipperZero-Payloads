@@ -21,5 +21,4 @@ Use responsibly and with permission. Unauthorized use may violate laws.
 
 ---
 
-*Author: hooker01*  
-*GitHub: [github.com/hooker01](https://github.com/hooker01)*
+
