@@ -12,7 +12,7 @@ This Ducky Script launches multiple hidden PowerShell jobs that heavily stress a
 
 ## Usage
 
-1. Flash the script to your Rubber Ducky.
+1. Copy the script to your Flipper0.
 2. Plug it into a Windows machine.
 3. The CPU will be maxed out until the jobs are manually terminated.
 
