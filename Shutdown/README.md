@@ -6,7 +6,7 @@ This script triggers a forced shutdown of the Windows system with a 15-minute co
 
 ## USAGE
 
-- Run the script (e.g., via Ducky Script) on a Windows 10 or 11 machine.
+- Run the script on a Windows 10 or 11 machine.
 - The system will display a shutdown warning and proceed to shut down after 900 seconds (15 minutes).
 - You can adjust the shutdown timer by changing the `/t` value (time in seconds).
 
