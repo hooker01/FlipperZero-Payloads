@@ -18,7 +18,7 @@ Windows 10 and Windows 11.
 - Intended for educational and prank purposes only.
 
 ## Disclaimer  
-Use responsibly and with permission. Unauthorized use may violate laws.
+Use responsibly and with permission. 
 
 ---
 
