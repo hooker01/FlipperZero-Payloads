@@ -17,9 +17,6 @@ Windows 10 and Windows 11.
 - Requires PowerShell with Windows Forms support.  
 - Intended for prank and educational purposes only.
 
-## Disclaimer  
-Use responsibly and only with permission. Unauthorized use may violate laws.
-
 ---
 
 **Author:** hooker01  
