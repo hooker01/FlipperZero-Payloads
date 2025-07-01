@@ -23,7 +23,7 @@ Windows 10 and Windows 11.
 - Does not modify the USB drive contents.
 
 ## Disclaimer  
-Use responsibly and only on authorized systems. Unauthorized use may violate laws.
+Use responsibly and only on authorized systems. 
 
 ---
 
