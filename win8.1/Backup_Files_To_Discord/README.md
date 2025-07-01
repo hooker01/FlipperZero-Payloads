@@ -23,7 +23,7 @@ This Flipper Zero payload runs a PowerShell script that monitors for USB device 
 - Does not modify the USB drive contents.
 
 ## Disclaimer  
-Use responsibly and only on authorized systems. Unauthorized use may violate laws.
+Use responsibly and only on authorized systems. 
 
 ---
 
