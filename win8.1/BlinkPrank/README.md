@@ -7,7 +7,7 @@ This payload runs a PowerShell script on a Windows machine that creates a fullsc
 ## Usage
 
 - Replace `'WRITE_YOUR_TEXT'` in the DuckyScript `.txt` payload with your desired message.
-- Run the payload on a Windows 8.1, Windows 10, or Windows 11 machine.
+- Run the payload on a Windows 8.1.
 - The script will display a blinking black-and-white fullscreen window showing the message and block input devices.
 
 ## Target
