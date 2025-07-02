@@ -60,12 +60,12 @@ public static extern bool BlockInput(bool block);
     $blockInput = Add-Type -MemberDefinition $signature -Name Win32BlockInput -Namespace Win32Functions -PassThru
     $blockInput::BlockInput($true)
 } catch {
-    Write-Warning "Nije moguce blokirati ulazne uređaje: $_"
+    Write-Warning "0: $_"
 }
 
 $form.Add_Click({})
 
-Write-Host "Pokrećem prank skriptu. Pritisnite Ctrl+C u PowerShell prozoru da biste je zaustavili."
+
 [System.Windows.Forms.Application]::Run($form)
 
 $blockInput::BlockInput($false)
