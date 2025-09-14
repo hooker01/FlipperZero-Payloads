@@ -1,44 +1,44 @@
-\# TELEGRAM Screenshot Tool
+# TELEGRAM Screenshot Tool
 
 
 
-\## Overview
+## Overview
 
 This payload deploys a PowerShell-based Telegram Remote Screenshot connected Bot. It captures screenshots and can terminate itself when commanded.
 
 
 
-\## Usage
+## Usage
 
-\- Replace `YOUR\_BOT\_TOKEN\_HERE` with your actual Telegram bot token.
+- Replace `YOUR\_BOT\_TOKEN\_HERE` with your actual Telegram bot token.
 
-\- Replace `$PU ` with valid user IDs who are allowed to control the Bot.
+- Replace `$PU ` with valid user IDs who are allowed to control the Bot.
 
-\- Copy the edited Ducky payload to a Flipper Zero.
+- Copy the edited Ducky payload to a Flipper Zero.
 
-\- Execute the payload on a target Windows 10/11 machine.
+- Execute the payload on a target Windows 10/11 machine.
 
-\- Send `/screenshot` to capture and send a screenshot via Telegram.
+- Send `/screenshot` to capture and send a screenshot via Telegram.
 
-\- Send `/terminate` to delete the script and exit.
+- Send `/terminate` to delete the script and exit.
 
 
 
-\## Features
+## Features
 
-\- Takes full desktop screenshots and sends them via Telegram.
+- Takes full desktop screenshots and sends them via Telegram.
 
-\- Supports user permission control for command access.
+- Supports user permission control for command access.
 
-\- Automatically cleans up traces after termination.
+- Automatically cleans up traces after termination.
 
-\- Runs in hidden mode (window hidden).
+- Runs in hidden mode (window hidden).
 
-\- May not work on systems with strict AV/GPO policies.
+- May not work on systems with strict AV/GPO policies.
 
-\- Requires no admin privileges to execute.
+- Requires no admin privileges to execute.
 
-\- `/terminate` also clears:
+- `/terminate` also clears:
 
 &nbsp; - Run box history
 
@@ -48,13 +48,13 @@ This payload deploys a PowerShell-based Telegram Remote Screenshot connected Bot
 
 
 
-\## Target
+## Target
 
 Windows 10 and Windows 11
 
 
 
-\## Disclaimer
+## Disclaimer
 
 Use responsibly and only with permission.
 
@@ -62,9 +62,9 @@ Use responsibly and only with permission.
 
 ---
 
-\*\*Author:\*\* hooker01  
+**Author:** hooker01  
+**GitHub:** [github.com/hooker01](https://github.com/hooker01)
 
-\*\*GitHub:\*\* https://github.com/hooker01
 
 
 
