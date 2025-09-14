@@ -10,9 +10,9 @@ This payload deploys a PowerShell-based Telegram Remote Screenshot connected Bot
 
 ## Usage
 
-- Replace `YOUR\_BOT\_TOKEN\_HERE` with your actual Telegram bot token.
+- Replace `YOUR_BOT_TOKEN_HERE` with your actual Telegram bot token.
 
-- Replace `$PU ` with valid user IDs who are allowed to control the Bot.
+- Replace `$PU` with valid user IDs who are allowed to control the Bot.
 
 - Copy the edited Ducky payload to a Flipper Zero.
 
@@ -64,6 +64,7 @@ Use responsibly and only with permission.
 
 **Author:** hooker01  
 **GitHub:** [github.com/hooker01](https://github.com/hooker01)
+
 
 
 
